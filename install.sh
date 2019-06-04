@@ -4,7 +4,7 @@
 # install apt-get packages
 sudo apt-get update -y
 sudo apt-get install -y nano bzip2 wget unzip \
-    python2.7=2.7.12-1ubuntu0~16.04.3 \
+    python2.7=2.7.12-1ubuntu0~16.04.4 \
     python-pip \
     libhdf5-serial-dev=1.8.16+docs-4ubuntu1 \
     libnetcdf-dev=1:4.4.0-2 \
