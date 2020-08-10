@@ -57,22 +57,25 @@ def get_qc(p, config, test):
                 elif test != config:
                     # Load from TEMP,
                     try:
-                        cfg = {'variables': {'sea_water_temperature': {test: cfg['variables']['sea_water_temperature'][test]}}}
+                        cfg = {'sea_water_temperature': {test: cfg['variables']['sea_water_temperature'][test]}}
                     # otherwise load it from main.
                     except:
                         # The dummy configuration ensures that the results from
                         # 'main' is copied into the results for var.
-                        cfg = {'common': {test: cfg['common'][test]}, var: {'dummy': None}}
+                        cfg = {'common': {test: cfg['common'][test]}}
             except:
                 with open('cotede_qc/qc_cfg/' + config + '.json') as f:
                     cfg = json.load(f)
 
         pqc = ProfileQC(inputs, cfg=cfg)
 
-        cotede_results = [p.uid(), config, pqc.flags[var].keys(), pqc]
-
     # Get the QC results, which use the IOC conventions.
-    qc_returned = cotede_results[3].flags[var][test]
+    try:
+        qc_returned = pqc.flags[var][test]
+    except:
+        # common category tests just return one QC code for the whole profile,
+        # but AutoQC expects a per level report
+        qc_returned = pqc.flags['common'][test].repeat(p.n_levels())
 
     # It looks like CoTeDe never returns a QC decision
     # of 2. If it ever does, we need to decide whether 
